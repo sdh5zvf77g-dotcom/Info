@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="description" content="A modern, up-to-date encyclopedia powered by Wikipedia. Search millions of articles from your phone." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Encyclopedia</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-top">
+        <button id="menuBtn" class="icon-btn" aria-label="Menu">☰</button>
+        <h1 class="logo">📖 Encyclopedia</h1>
+        <button id="themeBtn" class="icon-btn" aria-label="Toggle theme">🌙</button>
+      </div>
+      <form id="searchForm" class="search-form" autocomplete="off">
+        <div class="search-wrapper">
+          <input
+            type="search"
+            id="searchInput"
+            placeholder="Search any topic..."
+            enterkeyhint="search"
+            aria-label="Search encyclopedia"
+          />
+          <button type="submit" class="search-btn" aria-label="Search">🔍</button>
+        </div>
+        <ul id="suggestions" class="suggestions hidden" role="listbox"></ul>
+      </form>
+    </header>
+
+    <!-- Side menu -->
+    <nav id="sideMenu" class="side-menu" aria-hidden="true">
+      <div class="side-menu-header">
+        <span>Menu</span>
+        <button id="closeMenu" class="icon-btn">✕</button>
+      </div>
+      <ul>
+        <li><button data-action="home">🏠 Home</button></li>
+        <li><button data-action="random">🎲 Random Article</button></li>
+        <li><button data-action="featured">⭐ Featured</button></li>
+        <li><button data-action="history">📜 Recent Searches</button></li>
+        <li><button data-action="about">ℹ️ About</button></li>
+      </ul>
+      <div class="lang-select">
+        <label for="langSelect">Language</label>
+        <select id="langSelect">
+          <option value="en">English</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="de">Deutsch</option>
+          <option value="it">Italiano</option>
+          <option value="pt">Português</option>
+          <option value="ru">Русский</option>
+          <option value="zh">中文</option>
+          <option value="ja">日本語</option>
+          <option value="ar">العربية</option>
+          <option value="hi">हिन्दी</option>
+        </select>
+      </div>
+    </nav>
+    <div id="overlay" class="overlay hidden"></div>
+
+    <!-- Main content -->
+    <main id="main" class="main">
+      <!-- Home / Welcome -->
+      <section id="homeView" class="view">
+        <div class="hero">
+          <h2>Explore the world's knowledge</h2>
+          <p>Search millions of up-to-date articles from Wikipedia. Everything is live and free.</p>
+        </div>
+        <div class="quick-actions">
+          <button class="action-card" data-action="random">
+            <span class="action-icon">🎲</span>
+            <span>Random Article</span>
+          </button>
+          <button class="action-card" data-action="featured">
+            <span class="action-icon">⭐</span>
+            <span>Featured</span>
+          </button>
+        </div>
+        <section class="recent-section hidden" id="recentSection">
+          <h3>Recent Searches</h3>
+          <div id="recentList" class="recent-list"></div>
+        </section>
+        <section class="trending-section">
+          <h3>Popular Topics</h3>
+          <div id="popularList" class="chip-list">
+            <button class="chip" data-query="Albert Einstein">Albert Einstein</button>
+            <button class="chip" data-query="World War II">World War II</button>
+            <button class="chip" data-query="Solar System">Solar System</button>
+            <button class="chip" data-query="Artificial Intelligence">Artificial Intelligence</button>
+            <button class="chip" data-query="Climate Change">Climate Change</button>
+            <button class="chip" data-query="Human Evolution">Human Evolution</button>
+            <button class="chip" data-query="Quantum Mechanics">Quantum Mechanics</button>
+            <button class="chip" data-query="Renaissance">Renaissance</button>
+          </div>
+        </section>
+      </section>
+
+      <!-- Search results -->
+      <section id="resultsView" class="view hidden">
+        <h2 id="resultsTitle">Search Results</h2>
+        <div id="resultsList" class="results-list"></div>
+      </section>
+
+      <!-- Article view -->
+      <section id="articleView" class="view hidden">
+        <button id="backBtn" class="back-btn">← Back</button>
+        <article id="articleContent" class="article">
+          <!-- Filled by JS -->
+        </article>
+        <div class="article-actions">
+          <a id="wikiLink" href="#" target="_blank" rel="noopener" class="btn secondary">Open on Wikipedia</a>
+          <button id="shareBtn" class="btn secondary">Share</button>
+        </div>
+      </section>
+
+      <!-- History view -->
+      <section id="historyView" class="view hidden">
+        <h2>Recent Searches</h2>
+        <div id="historyList" class="results-list"></div>
+        <button id="clearHistory" class="btn secondary">Clear History</button>
+      </section>
+
+      <!-- About view -->
+      <section id="aboutView" class="view hidden">
+        <h2>About Encyclopedia</h2>
+        <div class="about-content">
+          <p>This is a free, open-source encyclopedia app powered by the live <strong>Wikipedia API</strong>.</p>
+          <p>All content is fetched in real time, so it stays up to date with the latest knowledge.</p>
+          <ul>
+            <li>🔍 Instant search across millions of articles</li>
+            <li>🌍 Multiple languages</li>
+            <li>📱 Install as an app on your phone</li>
+            <li>🌙 Dark mode</li>
+            <li>📜 Search history (stored only on your device)</li>
+          </ul>
+          <p>Data source: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (CC BY-SA)</p>
+          <p>Host this yourself on GitHub Pages for free — see the README.</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Loading -->
+    <div id="loader" class="loader hidden" aria-live="polite">
+      <div class="spinner"></div>
+      <span>Loading…</span>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast hidden" role="status"></div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+  </script>
+</body>
+</html>
